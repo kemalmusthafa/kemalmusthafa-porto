@@ -1,0 +1,803 @@
+/* ============================================================
+   GLOBAL STYLES — Kemal Musthafa Rajabi Portfolio
+   Next.js + Framer Motion | Dark Parallax Edition
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Design Tokens ────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Palette */
+    --color-bg:       #080808;
+    --color-surface:  #0f0f0f;
+    --color-surface2: #141414;
+    --color-border:   #1c1c1c;
+    --color-border-2: #262626;
+    --color-accent:   #c8ff00;
+    --color-accent-dim: rgba(200, 255, 0, 0.08);
+    --color-text:     #f0f0f0;
+    --color-muted:    #666666;
+    --color-muted-2:  #444444;
+    --color-bg-rgb: 8 8 8;
+    --color-surface-rgb: 15 15 15;
+    --color-accent-rgb: 200 255 0;
+    --color-accent-dark-rgb: 168 239 0;
+    --color-text-rgb: 240 240 240;
+    --color-muted-rgb: 102 102 102;
+    --color-border-rgb: 28 28 28;
+
+    /* Typography */
+    --font-clash:   "Outfit", sans-serif;
+    --font-cabinet: "Lexend", sans-serif;
+    --font-inter:   "Lexend", sans-serif;
+    --font-press:   "Press Start 2P", system-ui;
+
+    /* Motion */
+    --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+    --duration-fast:  200ms;
+    --duration-base:  400ms;
+    --duration-slow:  700ms;
+    --duration-enter: 900ms;
+
+    /* Layout */
+    --max-width: 1400px;
+    --nav-height: 72px;
+    --section-padding: clamp(80px, 12vw, 160px);
+  }
+
+  :root[data-theme="light"] {
+    --color-bg:       #f6f7f8;
+    --color-surface:  #ffffff;
+    --color-surface2: #f0f2f4;
+    --color-border:   #d8dde3;
+    --color-border-2: #c2c9d2;
+    --color-accent:   #6e9000;
+    --color-accent-dark: #5f7b00;
+    --color-accent-dim: rgba(110, 144, 0, 0.14);
+    --color-text:     #121417;
+    --color-muted:    #5f6670;
+    --color-muted-2:  #7a828d;
+    --color-bg-rgb: 246 247 248;
+    --color-surface-rgb: 255 255 255;
+    --color-accent-rgb: 110 144 0;
+    --color-accent-dark-rgb: 95 123 0;
+    --color-text-rgb: 18 20 23;
+    --color-muted-rgb: 95 102 112;
+    --color-border-rgb: 216 221 227;
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+}
+
+/* ── Base Reset ───────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    /* Lenis overrides this — but keep as fallback */
+    scroll-behavior: smooth;
+    /* Prevent horizontal overflow artifacts */
+    overflow-x: hidden;
+    /* GPU hint for the whole page */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-cabinet);
+    overflow-x: hidden;
+    /* Isolate stacking context so fixed elements behave */
+    isolation: isolate;
+  }
+
+  /* Smooth selection */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  /* Focus ring — accessible but styled */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    display: block;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* ── Typography Scale ─────────────────────────────────────── */
+@layer base {
+  .font-clash   { font-family: var(--font-clash); }
+  .font-cabinet { font-family: var(--font-cabinet); }
+  .font-inter   { font-family: var(--font-inter); }
+  .font-press   { font-family: var(--font-press); }
+}
+
+/* Fluid hero headline — shrinks gracefully on mobile */
+.text-hero {
+  font-family: var(--font-clash);
+  font-size: clamp(2.8rem, 9vw, 10.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+/* Section display heading */
+.text-display {
+  font-family: var(--font-clash);
+  font-size: clamp(2rem, 5.5vw, 6rem);
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+/* Card / sub-heading */
+.text-heading {
+  font-family: var(--font-clash);
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+/* Large body copy */
+.text-body-lg {
+  font-family: var(--font-cabinet);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* Section index label */
+.text-label {
+  font-family: var(--font-inter);
+  font-size: 0.6875rem; /* 11px */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+/* ── Utility Classes ──────────────────────────────────────── */
+@layer utilities {
+  /* Gradient accent text */
+  .text-accent-gradient {
+    background: linear-gradient(110deg, #e8ff00 0%, #c8ff00 60%, #a8ef00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Muted text colors */
+  .text-muted   { color: var(--color-muted); }
+  .text-muted-2 { color: var(--color-muted-2); }
+  .text-accent  { color: var(--color-accent); }
+
+  /* Surface backgrounds */
+  .bg-surface  { background-color: var(--color-surface); }
+  .bg-surface2 { background-color: var(--color-surface2); }
+
+  /* Thin border */
+  .border-subtle  { border-color: var(--color-border); }
+  .border-subtle2 { border-color: var(--color-border-2); }
+
+  /* Hide scrollbar (cross-browser) */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ── Grain / Noise Texture ────────────────────────────────── */
+/*
+   Applied as a pseudo-element on .grain-overlay.
+   Uses an SVG data URI so there's no extra network request.
+   opacity is kept very low — it's atmosphere, not decoration.
+*/
+.grain-overlay {
+  position: relative;
+  isolation: isolate; /* keep the overlay's z-index local */
+}
+
+.grain-overlay::after {
+  content: "";
+  position: fixed; /* fixed so it never scrolls — true film grain */
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.028;
+  mix-blend-mode: overlay;
+  /* Micro-animate the grain so it feels alive */
+  animation: grain-shift 0.12s steps(1) infinite;
+  will-change: transform;
+}
+
+@keyframes grain-shift {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-2%, -3%); }
+  20%  { transform: translate(3%,  2%); }
+  30%  { transform: translate(-1%,  4%); }
+  40%  { transform: translate(4%, -1%); }
+  50%  { transform: translate(-3%,  3%); }
+  60%  { transform: translate(2%, -4%); }
+  70%  { transform: translate(-4%,  1%); }
+  80%  { transform: translate(1%,  2%); }
+  90%  { transform: translate(-2%, -2%); }
+  100% { transform: translate(3%, -3%); }
+}
+
+/* ── Scroll Progress Indicator ────────────────────────────── */
+/*
+   A thin line at the very top of the viewport.
+   Controlled via --scroll-progress CSS variable set by JS.
+*/
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 1.5px;
+  width: 100%;
+  background-color: var(--color-border-2);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.scroll-progress-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform-origin: left center;
+  transform: scaleX(var(--scroll-progress, 0));
+  /* Use will-change so browser composites this independently */
+  will-change: transform;
+  /* No CSS transition here — Framer Motion drives it via useScroll */
+}
+
+/* ── Custom Cursor ────────────────────────────────────────── */
+/*
+   Two elements: a small dot (.cursor-dot) and a lagging ring (.cursor-ring).
+   Framer Motion drives their x/y via useMotionValue + useSpring.
+*/
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  will-change: transform;
+  /* Slightly brighter with a soft glow */
+  box-shadow: 0 0 8px 2px rgba(200, 255, 0, 0.45);
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(200, 255, 0, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  /* The ring is offset so it centers correctly */
+  margin-left: -15px;
+  margin-top: -15px;
+  transition: width var(--duration-fast) var(--ease-out-expo),
+              height var(--duration-fast) var(--ease-out-expo),
+              border-color var(--duration-fast) ease;
+}
+
+/* Cursor expand state — add .cursor-hover to body when over a link/button */
+body.cursor-hover .cursor-ring {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(200, 255, 0, 0.8);
+  margin-left: -27px;
+  margin-top: -27px;
+}
+
+/* ── Navigation ───────────────────────────────────────────── */
+.nav-blur {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(8, 8, 8, 0.7);
+  /* Subtle bottom border that appears when scrolled */
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-base) ease,
+              background var(--duration-base) ease;
+}
+
+.nav-blur.scrolled {
+  border-bottom-color: var(--color-border);
+}
+
+/* ── Section Wrappers ─────────────────────────────────────── */
+.section-pad {
+  padding-top: var(--section-padding);
+  padding-bottom: var(--section-padding);
+}
+
+.container-wide {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+
+/* ── Marquee / Ticker ─────────────────────────────────────── */
+/*
+   Two-row infinite ticker for skills.
+   GPU-composited: uses transform only, never left/margin.
+   will-change preallocates a compositor layer.
+*/
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  /* Pause on hover for accessibility */
+  animation-play-state: running;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+.marquee-left  { animation: marquee-left  28s linear infinite; }
+.marquee-right { animation: marquee-right 28s linear infinite; }
+
+/* ── Skill Pills ──────────────────────────────────────────── */
+.skill-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-border-2);
+  border-radius: 9999px;
+  font-family: var(--font-inter);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) var(--ease-out-expo),
+    border-color     var(--duration-fast) var(--ease-out-expo),
+    color            var(--duration-fast) var(--ease-out-expo),
+    transform        var(--duration-fast) var(--ease-spring);
+  cursor: default;
+  user-select: none;
+}
+
+.skill-pill:hover {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-bg);
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* ── Experience List Row ──────────────────────────────────── */
+.exp-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-out-expo),
+    padding          var(--duration-slow) var(--ease-out-expo);
+  /* Prevent paint flicker during expand */
+  contain: layout style;
+}
+
+.exp-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.exp-row:hover::before,
+.exp-row.active::before {
+  transform: scaleY(1);
+}
+
+.exp-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* ── Project Cards ────────────────────────────────────────── */
+.project-card {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  overflow: hidden;
+  transition:
+    transform     var(--duration-base) var(--ease-out-expo),
+    box-shadow    var(--duration-base) var(--ease-out-expo),
+    border-color  var(--duration-base) ease;
+  /* GPU compositing to avoid layout thrash on hover */
+  will-change: transform;
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(200, 255, 0, 0.04),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-base) ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0  0  40px var(--color-accent-dim);
+  border-color: var(--color-border-2);
+}
+
+.project-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Tag / Tech Chips ─────────────────────────────────────── */
+.tech-chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--color-border-2);
+  border-radius: 6px;
+  font-family: var(--font-inter);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  transition: border-color var(--duration-fast) ease,
+              color         var(--duration-fast) ease;
+}
+
+.tech-chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ── Stat Counter ─────────────────────────────────────────── */
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-number {
+  font-family: var(--font-clash);
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+  /* Prevent layout shift during count animation */
+  font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+}
+
+.stat-label {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ── Preloader ────────────────────────────────────────────── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Framer Motion drives exit animation — no CSS transition needed */
+}
+
+.preloader-count {
+  font-family: var(--font-clash);
+  font-size: clamp(4rem, 15vw, 14rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+  /* Glow effect on the counter */
+  text-shadow: 0 0 80px rgba(200, 255, 0, 0.3);
+  line-height: 1;
+}
+
+/* Wipe reveal bar */
+.preloader-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition: width 3s var(--ease-in-out);
+  /* Framer Motion overrides this */
+}
+
+/* ── Split Text (letter / word animations) ────────────────── */
+/*
+   Individual span wrappers generated by JS.
+   Inline-block is required for transform-based Y-axis animation.
+   overflow: hidden on the parent clips the pre-animation position.
+*/
+.split-word-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom; /* prevents baseline jump */
+}
+
+.split-word {
+  display: inline-block;
+  /* Framer Motion sets initial transform via style prop — this is the rest state */
+  will-change: transform, opacity;
+}
+
+.split-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  /* Preserve spacing between letters */
+  white-space: pre;
+}
+
+/* ── Hover Link Underline ─────────────────────────────────── */
+/*
+   Animated underline that grows from left on hover.
+   Use on nav items, inline links, footer email, etc.
+*/
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ── Email Hover Split (slide-up trick) ──────────────────── */
+/*
+   Two copies of the text stacked.
+   On hover: first slides up, second slides in from below.
+   Requires a wrapping element with overflow: hidden.
+*/
+.email-link {
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 1.2em;
+  line-height: 1.2;
+}
+
+.email-link span {
+  display: block;
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.email-link:hover span:first-child {
+  transform: translateY(-100%);
+}
+
+.email-link:hover span:last-child {
+  transform: translateY(-100%);
+}
+
+/* ── Glowing Radial BG ────────────────────────────────────── */
+/*
+   Large soft accent glow used sparingly (hero, contact).
+   Pointer-events: none so it never blocks interactions.
+*/
+.radial-glow {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(200, 255, 0, 0.06) 0%,
+    rgba(200, 255, 0, 0.02) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  will-change: transform;
+  /* Framer Motion controls x/y for parallax drift */
+}
+
+/* ── Backdrop Blur (Navbar / cards) ───────────────────────── */
+.glass {
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(8, 8, 8, 0.6);
+}
+
+/* ── Reduced Motion ───────────────────────────────────────── */
+/*
+   Respect the OS preference. Disables grain animation,
+   marquee, and any CSS keyframe. Framer Motion handles
+   the rest via its own reducedMotion feature.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay::after,
+  .marquee-track,
+  .preloader-bar {
+    animation: none !important;
+  }
+
+  .project-card,
+  .exp-row,
+  .skill-pill,
+  .link-underline::after,
+  .cursor-ring {
+    transition: none !important;
+  }
+}
+
+/* ── Lenis Scroll Fixes ────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hide global page scrollbar (keep scrolling functional) */
+html,
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* ── Theme Compatibility Overrides ─────────────────────────── */
+/*
+  Ensures light theme still applies correctly even when dev cache keeps
+  stale Tailwind color utilities from previous dark-only config.
+*/
+:root[data-theme="light"] body {
+  background-color: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
+:root[data-theme="light"] .bg-bg {
+  background-color: var(--color-bg) !important;
+}
+
+:root[data-theme="light"] .bg-surface {
+  background-color: var(--color-surface) !important;
+}
+
+:root[data-theme="light"] .bg-surface\/20 {
+  background-color: rgb(var(--color-surface-rgb) / 0.2) !important;
+}
+
+:root[data-theme="light"] .bg-surface\/30 {
+  background-color: rgb(var(--color-surface-rgb) / 0.3) !important;
+}
+
+:root[data-theme="light"] .bg-surface\/50 {
+  background-color: rgb(var(--color-surface-rgb) / 0.5) !important;
+}
+
+:root[data-theme="light"] .bg-surface\/60 {
+  background-color: rgb(var(--color-surface-rgb) / 0.6) !important;
+}
+
+:root[data-theme="light"] .bg-surface\/70 {
+  background-color: rgb(var(--color-surface-rgb) / 0.7) !important;
+}
+
+:root[data-theme="light"] .bg-bg\/80 {
+  background-color: rgb(var(--color-bg-rgb) / 0.8) !important;
+}
+
+:root[data-theme="light"] .border-border {
+  border-color: var(--color-border) !important;
+}
+
+:root[data-theme="light"] .text-text {
+  color: var(--color-text) !important;
+}
+
+:root[data-theme="light"] .text-muted {
+  color: var(--color-muted) !important;
+}
