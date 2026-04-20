@@ -19,6 +19,7 @@ export const Preloader = () => {
       );
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [count]);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export const Preloader = () => {
       const timer = setTimeout(() => setIsComplete(true), 300);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [count]);
 
   if (isComplete) return null;

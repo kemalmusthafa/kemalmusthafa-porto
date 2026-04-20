@@ -6,30 +6,6 @@ import { Mail, Phone, MapPin, Linkedin } from "lucide-react";
 import { PORTFOLIO_DATA } from "@/lib/data";
 import { useSitePreferences } from "@/lib/sitePreferences";
 
-const SplitTextHover = ({ text }: { text: string }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  return (
-    <div ref={containerRef} className="relative h-12 overflow-hidden">
-      <motion.span
-        className="absolute inset-0 flex items-center"
-        whileHover={{ y: -48 }}
-        transition={{ duration: 0.3 }}
-      >
-        <span>{text}</span>
-      </motion.span>
-      <motion.span
-        className="absolute inset-0 flex items-center"
-        initial={{ y: 48 }}
-        whileHover={{ y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <span className="text-accent">{text}</span>
-      </motion.span>
-    </div>
-  );
-};
-
 export const Contact = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
